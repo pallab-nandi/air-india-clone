@@ -12,7 +12,12 @@ async function signUp (req, res) {
         res.status(201).json({
             status : 'success',
             message : 'User registered successful',
-            user : newUser
+            user : {
+                id : newUser._id,
+                name : newUser.name,
+                username : newUser.username,
+                email : newUser.email
+            }
         })
     } catch (err) {
         console.log('Error while signup', err);
@@ -47,7 +52,7 @@ async function logIn (req, res) {
                                 expiresIn : authConfig.EXPIRES_AT
                             }
                         );
-                        return res.status(200).json({
+                        return res.status(202).json({
                             status : 'success',
                             message : 'User logged-in successfully',
                             accessToken : token
