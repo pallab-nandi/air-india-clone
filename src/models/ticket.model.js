@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 const ticketSchema = new mongoose.Schema({
     user : {
         type : mongoose.Types.ObjectId,
-        ref : 'users'
+        ref : 'users',
+        required : true
     },
     flight : {
         type : mongoose.Types.ObjectId,
-        ref : 'flights'
+        ref : 'flights',
+        requried : true
     },
     flightDate : {
         type : Date,

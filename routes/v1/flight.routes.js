@@ -1,5 +1,6 @@
 const express = require('express');
 const flightController = require('../../src/controllers/flight.controller');
+const flightValidator = require('../../src/validators/flight.validator');
 
 const router = express.Router();
 
@@ -8,16 +9,16 @@ const router = express.Router();
 router.get('/all', flightController.getFlights);
 
 //Fetch Flights by name
-// router.get('/:name', flightController.getFlightByName);
+router.get('/:name', [flightValidator.validName], flightController.getFlightByName);
 
 //Add Flights
-router.post('/add', flightController.addFlight);
+router.post('/add', [flightValidator.validBody], flightController.addFlight);
 
 //Update Flight
-router.put('/:name/edit', flightController.updateFlight);
+router.put('/:name/edit', [flightValidator.validName], flightController.updateFlight);
 
 //Delete Flight
-router.delete('/:name', flightController.deleteFlight);
+router.delete('/:name', [flightValidator.validName], flightController.deleteFlight);
 
 
 module.exports = router;

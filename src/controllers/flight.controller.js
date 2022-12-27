@@ -55,32 +55,32 @@ async function getFlights(req, res) {
     })
 }
 
-// async function getFlightByName(req, res) {
+async function getFlightByName(req, res) {
     
-//     const flightName = req.params.name;
+    const flightName = req.params.name;
 
-//     return await flightService
-//     .getFlightByName(flightName)
-//     .then((data) => {
-//         console.log(data);
-//         res.setHeader('content-type', 'application/json');
-//         res.writeHead(200);
-//         let returnValues = {};
-//         returnValues.status = 'success';
-//         returnValues.message = 'Flight fetched successfully';
-//         returnValues.data = data;
-//         res.end(JSON.stringify(returnValues));
-//     })
-//     .catch((err) => {
-//         console.log('Error while fetching Flight'.bold.bgRed, err);
-//         res.setHeader('content-type', 'application/json');
-//         res.writeHead(500);
-//         res.end(JSON.stringify({
-//             success : 'fail',
-//             message : 'Error while fetching Flight'
-//         }))
-//     })
-// }
+    return await flightService
+    .getFlightByName(flightName)
+    .then((data) => {
+        console.log(data);
+        res.setHeader('content-type', 'application/json');
+        res.writeHead(200);
+        let returnValues = {};
+        returnValues.status = 'success';
+        returnValues.message = 'Flight fetched successfully';
+        returnValues.data = data;
+        res.end(JSON.stringify(returnValues));
+    })
+    .catch((err) => {
+        console.log('Error while fetching Flight'.bold.bgRed, err);
+        res.setHeader('content-type', 'application/json');
+        res.writeHead(500);
+        res.end(JSON.stringify({
+            success : 'fail',
+            message : 'Error while fetching Flight'
+        }))
+    })
+}
 
 async function updateFlight(req, res) {
     const flightName = req.params.name;
@@ -138,7 +138,7 @@ async function deleteFlight(req, res) {
 module.exports = {
     addFlight,
     getFlights,
-    // getFlightByName,
+    getFlightByName,
     updateFlight,
     deleteFlight
 }
