@@ -11,10 +11,10 @@ router.get('/all', userController.getUsers);
 router.post('/add', userController.addUser);
 
 //Update User
-router.put('/:name/edit', userController.updateUser);
+router.put('/:username/edit', userController.updateUser);
 
 //Delete User
-router.delete('/:name', userController.deleteUser);
+router.delete('/:username', userController.deleteUser);
 
 
 module.exports = router;

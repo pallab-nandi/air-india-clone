@@ -13,24 +13,28 @@ async function bookTicket(req, res) {
         res.writeHead(201);
         let returnValues = {};
         returnValues.status = 'success';
-        returnValues.message = 'Ticket added successfully';
+        returnValues.message = 'Ticket Booked successfully';
         returnValues.data = ticket;
         res.end(JSON.stringify(returnValues));
     })
     .catch((err) => {
-        console.log('Error while adding Ticket'.bold.bgRed, err);
+        console.log('Error while booking Ticket'.bold.bgRed, err);
         res.setHeader('content-type', 'application/json');
         res.writeHead(500);
         res.end(JSON.stringify({
             success : 'fail',
-            message : 'Error while adding Ticket'
+            message : 'Error while booking Ticket'
         }))
     })
 }
 
 async function getTickets(req, res) {
+
+    let userID = "63a5cb01de935cdb6ee2711d";
+    let filters = req.query;
+
     return await ticketService
-    .getAllTicket()
+    .getAllTicket(userID, filters)
     .then((data) => {
         console.log(data);
         res.setHeader('content-type', 'application/json');
@@ -84,7 +88,7 @@ async function updateTicket(req, res) {
     const update = req.body;
 
     return await ticketService
-    .updateTicket({ticketID}, update)
+    .updateTicket(ticketID, update)
     .then((data) => {
         console.log(data);
         res.setHeader('content-type', 'application/json');

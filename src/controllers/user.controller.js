@@ -29,8 +29,11 @@ async function addUser(req, res) {
 }
 
 async function getUsers(req, res) {
+
+    let filters = req.query;
+
     return await userService
-    .getUser()
+    .getUser(filters)
     .then((data) => {
         console.log(data);
         res.setHeader('content-type', 'application/json');
@@ -53,11 +56,11 @@ async function getUsers(req, res) {
 }
 
 async function updateUser(req, res) {
-    const userName = req.params.name;
+    const userName = req.params.username;
     const update = req.body;
 
     return await userService
-    .updateUser({userName}, update)
+    .updateUser(userName, update)
     .then((data) => {
         console.log(data);
         res.setHeader('content-type', 'application/json');
@@ -81,7 +84,7 @@ async function updateUser(req, res) {
 
 async function deleteUser(req, res) {
     let toDelete = req.query.delete;
-    let userName = req.params.name;
+    let userName = req.params.username;
 
     return await userService
     .deleteUser(userName, toDelete)

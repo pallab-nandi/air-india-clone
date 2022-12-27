@@ -58,14 +58,16 @@ async function getAirlineByName(req, res) {
 
     return await airlineService
     .getAirline(airlineName)
-    .then((data) => {
+    .then(async (data) => {
         console.log(data);
         res.setHeader('content-type', 'application/json');
         res.writeHead(200);
+        let flights = await airlineService.getFlightsByAirline(airlineName);
         let returnValues = {};
         returnValues.status = 'success';
         returnValues.message = 'Airline fetched successfully';
-        returnValues.data = data;
+        returnValues.data = JSON.parse(JSON.stringify(data));
+        returnValues.data.flights = flights;
         res.end(JSON.stringify(returnValues));
     })
     .catch((err) => {
@@ -84,7 +86,7 @@ async function updateAirline(req, res) {
     const update = req.body;
 
     return await airlineService
-    .updateAirline({airlineName}, update)
+    .updateAirline(airlineName, update)
     .then((data) => {
         console.log(data);
         res.setHeader('content-type', 'application/json');

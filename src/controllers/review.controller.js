@@ -30,8 +30,11 @@ async function addReview(req, res) {
 }
 
 async function getReviews(req, res) {
+
+    let filters = req.query;
+
     return await reviewService
-    .getAllReviews()
+    .getAllReviews(filters)
     .then((data) => {
         console.log(data);
         res.setHeader('content-type', 'application/json');
@@ -85,7 +88,7 @@ async function updateReview(req, res) {
     const update = req.body;
 
     return await reviewService
-    .updateReview({reviewID}, update)
+    .updateReview(reviewID, update)
     .then((data) => {
         console.log(data);
         res.setHeader('content-type', 'application/json');

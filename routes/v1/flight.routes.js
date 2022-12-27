@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/all', flightController.getFlights);
 
 //Fetch Flights by name
-router.get('/:name', flightController.getFlightByName);
+// router.get('/:name', flightController.getFlightByName);
 
 //Add Flights
 router.post('/add', flightController.addFlight);

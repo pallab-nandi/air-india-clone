@@ -18,12 +18,12 @@ class AirlineService {
 
     getAirline(name) {
         return this.schema
-        .findOne({name});
+        .findOne({name : { $regex : new RegExp(name, "i") }});
     }
 
     updateAirline(filter, update) {
         return this.schema
-        .findOneAndUpdate(filter, update, {returnOriginal : false});
+        .findOneAndUpdate({name : { $regex : new RegExp(filter, "i") }}, update, {returnOriginal : false});
     }
 
     deleteAirline(name, toDelete) {
@@ -31,6 +31,13 @@ class AirlineService {
             return this.schema
             .deleteOne({name});
         }
+    }
+
+    async getFlightsByAirline(name) {
+        let airline = await this.schema.findOne({name : { $regex : new RegExp(name, "i") }});
+        let airlineID = airline._id;
+
+        return await db.flight.find({airline : airlineID}, {airline : 0});
     }
 }
 

@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const ticketSchema = new mongoose.Schema({
-    user_id : {
+    user : {
         type : mongoose.Types.ObjectId,
         ref : 'users'
     },
-    flight_id : {
+    flight : {
         type : mongoose.Types.ObjectId,
         ref : 'flights'
     },
@@ -24,8 +24,8 @@ const ticketSchema = new mongoose.Schema({
     status : {
         type : String,
         required : true,
-        default : 'In Process',
-        enum : ['Booked', 'Cancelled', 'In Process']
+        default : 'In-Process',
+        enum : ['Booked', 'Cancelled', 'In-Process']
     }
 }, { timestamps : true })
 

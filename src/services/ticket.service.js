@@ -11,20 +11,25 @@ class TicketService {
         .create(ticket)
     }
 
-    getAllTicket(userID) {
+    getAllTicket(userID, filters) {
+
+        if(Object.values(filters).length != 0) {
+            return this.#filterFunc(filters);
+        }
+
         return this.schema
-        .findById(userID);
+        .find({ user : userID});
     }
 
     getTicketByID(id) {
         return this.schema
-        .findOne(id);
+        .findOne({id});
     }
 
     //only by administration
     updateTicket(filter, update) {
         return this.schema
-        .findOneAndUpdate(filter, update, {returnOriginal : false});
+        .findOneAndUpdate({_id : filter}, update, {returnOriginal : false});
     }
 
     //only by administration
@@ -32,6 +37,33 @@ class TicketService {
         if(toDelete) {
             return this.schema
             .findByIdAndDelete(id);
+        }
+    }
+
+    //Search and Filter function
+    async #filterFunc(filters) {
+        if(filters.flight) {
+            let flight = await db.flight.findOne({name : { $regex : new RegExp(filters.flight, "i") }});
+            let flightID = flight._id;
+            return this.schema.find({flight : flightID});
+        }
+
+        if(filters.price && filters.price == 'asc') {
+            return this.schema.find().sort('costPrice');
+        } else if(filters.price && filters.price == 'desc') {
+            return this.schema.find().sort('-costPrice');
+        }
+
+        if(filters.maxPrice) {
+            return this.schema.find({costPrice : {$lte : filters.maxPrice}});
+        }
+
+        if(filters.minPrice) {
+            return this.schema.find({costPrice : {$gte : filters.minPrice}});
+        }
+
+        if(filters.status) {
+            return this.schema.find({status : { $regex : new RegExp(filters.status, "i") }});
         }
     }
 }

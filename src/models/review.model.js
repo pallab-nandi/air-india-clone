@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
-    user_id : {
+    user : {
         type : mongoose.Types.ObjectId,
         ref : 'users',
         required : true
     },
-    flight_id : {
+    flight : {
         type : mongoose.Types.ObjectId,
         ref : 'flights',
         required : true
