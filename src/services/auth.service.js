@@ -39,7 +39,7 @@ passport.use(new JWTStrategy(
     },
     async (token, done) => {
         try {
-            return done(null, token.user)
+            return done(null, token)
         } catch (err) {
             console.log(err);
             done(err)

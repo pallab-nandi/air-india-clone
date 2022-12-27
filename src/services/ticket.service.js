@@ -27,7 +27,13 @@ class TicketService {
     }
 
     //only by administration
-    updateTicket(filter, update) {
+    updateTicket(filter, update, cancel) {
+
+        if(cancel) {
+            return this.schema
+            .findOneAndUpdate({_id : filter}, {status : 'Cancelled'}, {returnOriginal : false});
+        }
+
         return this.schema
         .findOneAndUpdate({_id : filter}, update, {returnOriginal : false});
     }

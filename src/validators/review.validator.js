@@ -58,8 +58,27 @@ async function validReviewID(req, res, next) {
     } else next();
 }
 
+async function editOrDeleteValidatator(req, res, next) {
+    let userID = req.decodedJwt._id;
+    let reviewID = req.params.id;
+
+    let review = await db.review.findOne({_id : reviewID});
+    let reviewUser = review.user;
+
+    if(userID !== reviewUser) {
+        console.log('Unauthorized Access');
+        res.setHeader('content-type', 'application/json');
+        res.writeHead(401);
+        res.end(JSON.stringify({
+            success : 'fail',
+            message : 'Unauthorized Access'
+        }))
+    } else next();
+}
+
 module.exports = {
     validTicket,
     validBody,
-    validReviewID
+    validReviewID,
+    editOrDeleteValidatator
 }

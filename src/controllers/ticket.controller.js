@@ -86,9 +86,10 @@ async function getTicketsByID(req, res) {
 async function updateTicket(req, res) {
     const ticketID = req.params.id;
     const update = req.body;
+    const cancel = req.query.cancel;
 
     return await ticketService
-    .updateTicket(ticketID, update)
+    .updateTicket(ticketID, update, cancel)
     .then((data) => {
         console.log(data);
         res.setHeader('content-type', 'application/json');

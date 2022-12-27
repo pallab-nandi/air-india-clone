@@ -44,9 +44,9 @@ async function logIn (req, res) {
                     {session : false},
                     async (err) => {
                         if(err) return next(err)
-                        const body = {_id : user._id, email : user.email};
+                        const body = {_id : user._id, email : user.email, roles : user.roles};
                         const token = jwt.sign(
-                            {user : body},
+                            body,
                             authConfig.SECRET_KEY,
                             {
                                 expiresIn : authConfig.EXPIRES_AT
