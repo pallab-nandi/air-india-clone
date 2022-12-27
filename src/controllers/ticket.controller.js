@@ -3,7 +3,9 @@ const { ticketService } = require('../services/ticket.service');
 
 async function bookTicket(req, res) {
 
+    const user = req.decodedJwt._id;
     const ticket = req.body;
+    ticket.user = user;
 
     return await ticketService
     .bookTicket(ticket)

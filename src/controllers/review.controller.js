@@ -3,7 +3,9 @@ const { reviewService } = require('../services/review.service');
 
 async function addReview(req, res) {
 
+    const user = req.decodedJwt._id;
     const review = req.body;
+    review.user = user;
     const ticketID = req.params.ticket_id;
 
     return await reviewService

@@ -6,7 +6,13 @@ class TicketService {
         this.schema = db.ticket;
     }
 
-    bookTicket(ticket) {
+    async bookTicket(ticket) {
+        let flight = await db.flight.findOne({name : {$regex : new RegExp(ticket.flight, "i")}});
+        ticket.flight = flight._id;
+        
+        let cost = flight.price;
+        ticket.costPrice = parseInt(ticket.total_seats) * parseInt(cost);
+
         return this.schema
         .create(ticket)
     }
