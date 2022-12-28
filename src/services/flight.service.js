@@ -16,10 +16,10 @@ class FlightService {
         .find();
     }
 
-    // getFlightByName(name) {
-    //     return this.schema
-    //     .findOne({name});
-    // }
+    getFlightByName(name) {
+        return this.schema
+        .findOne({name});
+    }
 
     async addFlight(flight) {
         let airline = await db.airline.findOne({name : { $regex : new RegExp(filters.airline, "i") }});

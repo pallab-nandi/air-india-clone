@@ -9,6 +9,7 @@ class TicketService {
     async bookTicket(ticket) {
         let flight = await db.flight.findOne({name : {$regex : new RegExp(ticket.flight, "i")}});
         ticket.flight = flight._id;
+        ticket.flightDate = flight.departureTime;
         
         let cost = flight.price;
         ticket.costPrice = parseInt(ticket.total_seats) * parseInt(cost);
