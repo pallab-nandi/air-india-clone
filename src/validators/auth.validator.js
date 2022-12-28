@@ -73,7 +73,7 @@ function isAdmin(req, res, next) {
         }));
     } else {
         let roles = req.decodedJwt.roles;
-        let adminRole = roles.filter((role) => role === 'admin');
+        let adminRole = roles.filter((role) => role === 'Admin');
         if(adminRole.length == 0) {
             console.log('User is not an Admin');
             res.setHeader('content-type', 'application/json');

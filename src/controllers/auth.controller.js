@@ -55,7 +55,7 @@ async function logIn (req, res) {
                         return res.status(202).json({
                             status : 'success',
                             message : 'User logged-in successfully',
-                            accessToken : token
+                            accessToken : `Bearer ${token}`
                         })
                     }
                 )

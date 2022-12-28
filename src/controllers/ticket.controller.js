@@ -32,7 +32,7 @@ async function bookTicket(req, res) {
 
 async function getTickets(req, res) {
 
-    let userID = "63a5cb01de935cdb6ee2711d";
+    let userID = req.decodedJwt._id;
     let filters = req.query;
 
     return await ticketService
@@ -61,9 +61,10 @@ async function getTickets(req, res) {
 async function getTicketsByID(req, res) {
 
     const ticketID = req.params.id;
+    let userID = req.decodedJwt._id;
 
     return await ticketService
-    .getTicketByID(ticketID)
+    .getTicketByID(userID, ticketID)
     .then((data) => {
         console.log(data);
         res.setHeader('content-type', 'application/json');

@@ -20,16 +20,16 @@ class TicketService {
     getAllTicket(userID, filters) {
 
         if(Object.values(filters).length != 0) {
-            return this.#filterFunc(filters);
+            return this.#filterFunc(userID, filters);
         }
 
         return this.schema
         .find({ user : userID});
     }
 
-    getTicketByID(id) {
+    getTicketByID(userID, id) {
         return this.schema
-        .findOne({id});
+        .findOne({user : userID, _id : id});
     }
 
     //only by administration
@@ -53,30 +53,45 @@ class TicketService {
     }
 
     //Search and Filter function
-    async #filterFunc(filters) {
-        if(filters.flight) {
-            let flight = await db.flight.findOne({name : { $regex : new RegExp(filters.flight, "i") }});
-            let flightID = flight._id;
-            return this.schema.find({flight : flightID});
-        }
+    async #filterFunc(userID, filters) {
 
-        if(filters.price && filters.price == 'asc') {
-            return this.schema.find().sort('costPrice');
-        } else if(filters.price && filters.price == 'desc') {
-            return this.schema.find().sort('-costPrice');
+        let customs = [];
+
+        if(filters.flight) {
+            let flight = await db.flight.findOne({user : userID, name : { $regex : new RegExp(filters.flight, "i") }});
+            let flightID = flight._id;
+            customs.push({user : userID, flight : flightID});
         }
 
         if(filters.maxPrice) {
-            return this.schema.find({costPrice : {$lte : filters.maxPrice}});
+            customs.push({user : userID, costPrice : {$lte : filters.maxPrice}});
         }
 
         if(filters.minPrice) {
-            return this.schema.find({costPrice : {$gte : filters.minPrice}});
+            customs.push({user : userID, costPrice : {$gte : filters.minPrice}});
         }
 
         if(filters.status) {
-            return this.schema.find({status : { $regex : new RegExp(filters.status, "i") }});
+            customs.push({user : userID, status : { $regex : new RegExp(filters.status, "i") }});
         }
+
+        if((filters.sort || (filters.sort && filters.sortType)) && customs.length != 0) {
+            if(filters.sortType == 'desc') {
+                let sortObj = {};
+                let sort = filters.sort;
+                sortObj[sort] = -1;
+                return this.schema.find({$and : customs}).sort(sortObj);
+            }
+            return this.schema.find({$and : customs}).sort(filters.sort);
+        } else if(filters.sort || (filters.sort && filters.sortType)) {
+            if(filters.sortType == 'desc') {
+                let sortObj = {};
+                let sort = filters.sort;
+                sortObj[sort] = -1;
+                return this.schema.find({user : userID}).sort(sortObj);
+            }
+            return this.schema.find({user : userID}).sort(filters.sort);
+        } else return this.schema.find({$and : customs});
     }
 }
 

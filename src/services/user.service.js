@@ -35,11 +35,38 @@ class UserService {
 
     //Search and Filter function
     #filterFunc(filters) {
-        if(filters.name && filters.sort && filters.sort == 'desc') {
-            return this.schema.find({name : { $regex : new RegExp(filters.name, "i") }}).sort('-name');
-        } else if(filters.name) {
-            return this.schema.find({name : { $regex : new RegExp(filters.name, "i") }}).sort('name');
+
+        let customs = [];
+
+        if(filters.name) {
+            customs.push({name : { $regex : new RegExp(filters.name, "i") }});
         }
+
+        if(filters.email) {
+            customs.push({email : { $regex : new RegExp(filters.email, "i") }});
+        }
+
+        if(filters.username) {
+            customs.push({username : { $regex : new RegExp(filters.username, "i") }});
+        }
+
+        if((filters.sort || (filters.sort && filters.sortType)) && customs.length != 0) {
+            if(filters.sortType == 'desc') {
+                let sortObj = {};
+                let sort = filters.sort;
+                sortObj[sort] = -1;
+                return this.schema.find({$and : customs}).sort(sortObj);
+            }
+            return this.schema.find({$and : customs}).sort(filters.sort);
+        } else if(filters.sort || (filters.sort && filters.sortType)) {
+            if(filters.sortType == 'desc') {
+                let sortObj = {};
+                let sort = filters.sort;
+                sortObj[sort] = -1;
+                return this.schema.find().sort(sortObj);
+            }
+            return this.schema.find().sort(filters.sort);
+        } else return this.schema.find({$and : customs});
     }
 }
 

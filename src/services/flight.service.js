@@ -45,44 +45,51 @@ class FlightService {
     //Search and Filter functions
 
     #filterFunc(filters) {
-        if(filters.price && filters.price == 'asc') {
-            return this.schema.find().sort('price');
-        } else if(filters.price && filters.price == 'desc') {
-            return this.schema.find().sort('-price');
-        }
-
-        if(filters.duration && filters.duration == 'asc') {
-            return this.schema.find().sort('duration').collation({locale: "en_US", numericOrdering: true});
-        } else if(filters.duration && filters.duration == 'desc') {
-            return this.schema.find().sort('-duration').collation({locale: "en_US", numericOrdering: true});
-        }
+        
+        let customs = [];
 
         if(filters.maxPrice) {
-            return this.schema.find({price : {$lte : filters.maxPrice}});
+            customs.push({price : {$lte : filters.maxPrice}});
         }
 
         if(filters.minPrice) {
-            return this.schema.find({price : {$gte : filters.minPrice}});
+            customs.push({price : {$gte : filters.minPrice}});
         }
 
         if(filters.arrivalAirport) {
-            return this.schema.find({arrivalAirport : { $regex : new RegExp(filters.arrivalAirport, "i") }});
+            customs.push({arrivalAirport : { $regex : new RegExp(filters.arrivalAirport, "i") }});
         }
         
         if(filters.departureAirport) {
-            return this.schema.find({departureAirport : { $regex : new RegExp(filters.departureAirport, "i") }});
+            customs.push({departureAirport : { $regex : new RegExp(filters.departureAirport, "i") }});
         }
 
-        if(filters.name && filters.sort && filters.sort == 'desc') {
-            return this.schema.find({name : { $regex : new RegExp(filters.name, "i") }}).sort('name');
-        } else if(filters.name || (filters.name && filters.sort && filters.sort == 'asc')) {
-            return this.schema.find({name : { $regex : new RegExp(filters.name, "i") }}).sort('-name');
+        if(filters.name) {
+            customs.push({name : { $regex : new RegExp(filters.name, "i") }});
         }
 
-        if(filters.airline && filters.sort && filters.sort == 'desc') {
-            return this.schema.find({airline : { $regex : new RegExp(filters.airline, "i") }}).sort('name');
-        } else if(filters.airline || (filters.airline && filters.sort == 'asc')) {
-            return this.schema.find({airline : { $regex : new RegExp(filters.airline, "i") }}).sort('-name');
+        if(filters.airline) {
+            customs.push({airline : { $regex : new RegExp(filters.airline, "i") }});
+        }
+
+        if((filters.sort || (filters.sort && filters.sortType)) && customs.length != 0) {
+            if(filters.sortType == 'desc') {
+                let sortObj = {};
+                let sort = filters.sort;
+                sortObj[sort] = -1;
+                return this.schema.find({$and : customs}).sort(sortObj).collation({locale: "en_US", numericOrdering: true})
+            }
+            return this.schema.find({$and : customs}).sort(filters.sort).collation({locale: "en_US", numericOrdering: true})
+        } else if(filters.sort || (filters.sort && filters.sortType)) {
+            if(filters.sortType == 'desc') {
+                let sortObj = {};
+                let sort = filters.sort;
+                sortObj[sort] = -1;
+                return this.schema.find().sort(sortObj).collation({locale: "en_US", numericOrdering: true})
+            }
+            return this.schema.find().sort(filters.sort).collation({locale: "en_US", numericOrdering: true})
+        } else {
+            return this.schema.find({$and : customs});
         }
     }
 }

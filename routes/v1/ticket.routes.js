@@ -19,7 +19,7 @@ router.post('/add', [authValidator.verifyJwt, ticketValidator.validBody], ticket
 router.put('/:id/edit', [authValidator.verifyJwt, authValidator.isAdmin, ticketValidator.validID], ticketController.updateTicket);
 
 //Cancel Ticket - ?cancel=true
-router.put('/:id', [authValidator.verifyJwt, ticketValidator.validID], ticketController.cancelTicket);
+router.put('/:id', [authValidator.verifyJwt, ticketValidator.validID], ticketController.updateTicket);
 
 //Delete Ticket
 router.delete('/:id', [authValidator.verifyJwt, authValidator.isAdmin, ticketValidator.validID], ticketController.deleteTicket);

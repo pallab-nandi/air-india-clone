@@ -45,25 +45,40 @@ class ReviewService {
 
     //Search and Filter function
     async #filterFunc(filters) {
+
+        let customs = [];
+
         if(filters.flight) {
             let flight = await db.flight.findOne({name : { $regex : new RegExp(filters.flight, "i") }});
             let flightID = flight._id;
-            return this.schema.find({flight : flightID});
-        }
-
-        if(filters.ratings && filters.ratings == 'asc') {
-            return this.schema.find().sort('ratings');
-        } else if(filters.ratings && filters.ratings == 'desc') {
-            return this.schema.find().sort('-ratings');
+            customs.push({flight : flightID});
         }
 
         if(filters.maxRating) {
-            return this.schema.find({ratings : {$lte : filters.maxRating}});
+            customs.push({ratings : {$lte : filters.maxRating}});
         }
 
         if(filters.minRating) {
-            return this.schema.find({ratings : {$gte : filters.minRating}});
+            customs.push({ratings : {$gte : filters.minRating}});
         }
+
+        if((filters.sort || (filters.sort && filters.sortType)) && customs.length != 0) {
+            if(filters.sortType == 'desc') {
+                let sortObj = {};
+                let sort = filters.sort;
+                sortObj[sort] = -1;
+                return this.schema.find({$and : customs}).sort(sortObj);
+            }
+            return this.schema.find({$and : customs}).sort(filters.sort);
+        } else if(filters.sort || (filters.sort && filters.sortType)) {
+            if(filters.sortType == 'desc') {
+                let sortObj = {};
+                let sort = filters.sort;
+                sortObj[sort] = -1;
+                return this.schema.find().sort(sortObj);
+            }
+            return this.schema.find().sort(filters.sort);
+        } else return this.schema.find({$and : customs});
     }
 }
 
