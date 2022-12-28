@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/all', [authValidator.verifyJwt, authValidator.isAdmin], userController.getUsers);
 
 //Add Users
-router.post('/add', [authValidator.verifyJwt, authValidator.isAdmin, userValidator.validBody], userController.addUser);
+router.post('/add', [authValidator.verifyJwt, authValidator.isAdmin, userValidator.validBody, authValidator.validEmail], userController.addUser);
 
 //Update User
 router.put('/:username/edit', [authValidator.verifyJwt, authValidator.isAdmin, userValidator.validUsername], userController.updateUser);
