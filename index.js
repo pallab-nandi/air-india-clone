@@ -3,6 +3,7 @@ const colors = require('colors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const passport = require('passport');
+const path = require('path');
 
 
 const serverConfig = require('./src/configs/server.config');
@@ -24,7 +25,7 @@ require('./routes/index.routes')(app);
 
 app.get('/', (req, res) => {
     console.log('Hello World'.bold.green);
-    res.status(200).end('Hello World');
+    res.status(200).sendFile(path.join(__dirname, './src/public/index.html'));
 })
 
 
