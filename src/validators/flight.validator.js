@@ -22,7 +22,7 @@ async function validBody(req, res, next) {
             status : 'fail',
             message : 'Body is invalid or not present'
         }))
-    } else if(typeof(body.price) != Number) {
+    } else if(!Number(body.price) && Number(body.price) != 0) {
         console.log('Price is invalid or not present');
         res.setHeader('content-type', 'application/json');
         res.writeHead(400);
