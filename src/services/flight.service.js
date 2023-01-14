@@ -22,7 +22,7 @@ class FlightService {
     }
 
     async addFlight(flight) {
-        let airline = await db.airline.findOne({name : { $regex : new RegExp(filters.airline, "i") }});
+        let airline = await db.airline.findOne({name : { $regex : new RegExp(flight.airline, "i") }});
         let airlineID = airline._id;
         flight.airline = airlineID;
 
