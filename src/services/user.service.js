@@ -8,28 +8,28 @@ class UserService {
 
     addUser(user) {
         return this.schema
-        .create(user);
+            .create(user);
     }
 
     getUser(filters) {
 
-        if(Object.values(filters).length != 0) {
+        if (Object.values(filters).length != 0) {
             return this.#filterFunc(filters);
         }
 
         return this.schema
-        .find();
+            .find();
     }
 
     async updateUser(filter, update) {
         return await this.schema
-        .findOneAndUpdate({username : { $regex : new RegExp(filter, "i") }}, update, {returnOriginal : false});
+            .findOneAndUpdate({ username: { $regex: new RegExp(filter, "i") } }, update, { new: true });
     }
 
     deleteUser(username, toDelete) {
-        if(toDelete) {
+        if (toDelete) {
             return this.schema
-            .deleteOne({username : { $regex : new RegExp(username, "i") }});
+                .deleteOne({ username: { $regex: new RegExp(username, "i") } });
         }
     }
 
@@ -38,35 +38,35 @@ class UserService {
 
         let customs = [];
 
-        if(filters.name) {
-            customs.push({name : { $regex : new RegExp(filters.name, "i") }});
+        if (filters.name) {
+            customs.push({ name: { $regex: new RegExp(filters.name, "i") } });
         }
 
-        if(filters.email) {
-            customs.push({email : { $regex : new RegExp(filters.email, "i") }});
+        if (filters.email) {
+            customs.push({ email: { $regex: new RegExp(filters.email, "i") } });
         }
 
-        if(filters.username) {
-            customs.push({username : { $regex : new RegExp(filters.username, "i") }});
+        if (filters.username) {
+            customs.push({ username: { $regex: new RegExp(filters.username, "i") } });
         }
 
-        if((filters.sort || (filters.sort && filters.sortType)) && customs.length != 0) {
-            if(filters.sortType == 'desc') {
+        if ((filters.sort || (filters.sort && filters.sortType)) && customs.length != 0) {
+            if (filters.sortType == 'desc') {
                 let sortObj = {};
                 let sort = filters.sort;
                 sortObj[sort] = -1;
-                return this.schema.find({$and : customs}).sort(sortObj);
+                return this.schema.find({ $and: customs }).sort(sortObj);
             }
-            return this.schema.find({$and : customs}).sort(filters.sort);
-        } else if(filters.sort || (filters.sort && filters.sortType)) {
-            if(filters.sortType == 'desc') {
+            return this.schema.find({ $and: customs }).sort(filters.sort);
+        } else if (filters.sort || (filters.sort && filters.sortType)) {
+            if (filters.sortType == 'desc') {
                 let sortObj = {};
                 let sort = filters.sort;
                 sortObj[sort] = -1;
                 return this.schema.find().sort(sortObj);
             }
             return this.schema.find().sort(filters.sort);
-        } else return this.schema.find({$and : customs});
+        } else return this.schema.find({ $and: customs });
     }
 }
 

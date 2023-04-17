@@ -8,36 +8,36 @@ class AirlineService {
 
     addAirline(airline) {
         return this.schema
-        .create(airline)
+            .create(airline)
     }
 
     getAllAirline() {
         return this.schema
-        .find();
+            .find();
     }
 
     getAirline(name) {
         return this.schema
-        .findOne({name : { $regex : new RegExp(name, "i") }});
+            .findOne({ name: { $regex: new RegExp(name, "i") } });
     }
 
     updateAirline(filter, update) {
         return this.schema
-        .findOneAndUpdate({name : { $regex : new RegExp(filter, "i") }}, update, {returnOriginal : false});
+            .findOneAndUpdate({ name: { $regex: new RegExp(filter, "i") } }, update, { new: true });
     }
 
     deleteAirline(name, toDelete) {
-        if(toDelete) {
+        if (toDelete) {
             return this.schema
-            .deleteOne({name});
+                .deleteOne({ name });
         }
     }
 
     async getFlightsByAirline(name) {
-        let airline = await this.schema.findOne({name : { $regex : new RegExp(name, "i") }});
+        let airline = await this.schema.findOne({ name: { $regex: new RegExp(name, "i") } });
         let airlineID = airline._id;
 
-        return await db.flight.find({airline : airlineID}, {airline : 0});
+        return await db.flight.find({ airline: airlineID }, { airline: 0 });
     }
 }
 
